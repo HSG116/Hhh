@@ -1,0 +1,183 @@
+/* Enhanced Service Cards Styles */
+.service-card {
+    position: relative;
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    background: var(--card-bg);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition-slow);
+    overflow: hidden;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.service-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    animation: cardAppear 0.8s ease forwards;
+}
+
+/* تأثيرات ظهور البطاقات */
+@keyframes cardAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* تأثير توهج عند التحويم */
+.card-glow-effect {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(78, 107, 255, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: 0.15s ease;
+    z-index: 0;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--box-shadow-hover);
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-1);
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.service-card:hover::before {
+    opacity: 1;
+}
+
+.service-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    background: var(--gradient-1);
+    box-shadow: var(--glow-effect);
+}
+
+.service-icon i {
+    color: var(--text-primary);
+}
+
+.service-card h3 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.service-card h4 {
+    color: var(--accent-color);
+    margin: 1.5rem 0 1rem;
+    font-size: 1.2rem;
+}
+
+.service-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.service-features {
+    background: rgba(78, 107, 255, 0.05);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.service-details {
+    list-style: none;
+    margin: 1rem 0;
+}
+
+.service-details li {
+    color: var(--text-secondary);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+}
+
+.service-details li i {
+    color: var(--accent-color);
+    margin-left: 0.5rem;
+}
+
+.service-portfolio {
+    margin-top: 1.5rem;
+}
+
+.service-portfolio ul {
+    list-style: none;
+    margin: 1rem 0;
+}
+
+.service-portfolio li {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.service-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.service-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.service-image:hover {
+    transform: scale(1.05);
+    box-shadow: var(--box-shadow-hover);
+}
+
+.service-result,
+.service-highlight {
+    background: rgba(78, 107, 255, 0.1);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin: 1rem 0;
+    color: var(--text-primary);
+    border-right: 4px solid var(--accent-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .service-card {
+        padding: 1.5rem;
+    }
+
+    .service-images {
+        grid-template-columns: 1fr;
+    }
+
+    .service-image {
+        height: 180px;
+    }
+}

@@ -1,0 +1,125 @@
+/* تأثيرات Modal الصور */
+.image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.image-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    position: relative;
+    z-index: 1;
+    max-width: 90%;
+    max-height: 90vh;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.image-modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-image {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(78, 107, 255, 0.3);
+}
+
+.close-modal {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.close-modal:hover {
+    transform: rotate(90deg);
+}
+
+/* تأثيرات الأيقونات */
+.service-icon {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.icon-pulse {
+    animation: iconPulse 0.6s ease-in-out;
+}
+
+@keyframes iconPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* تأثيرات عناصر القائمة */
+.list-item-highlight {
+    transform: translateX(10px);
+    color: var(--text-primary) !important;
+    transition: all 0.3s ease;
+}
+
+.list-item-highlight i {
+    transform: scale(1.2);
+    color: var(--accent-color) !important;
+}
+
+/* تأثير تحميل متدرج للبطاقات */
+.service-animate {
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.service-animate:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.service-animate:nth-child(2) {
+    transition-delay: 0.3s;
+}
+
+.service-animate:nth-child(3) {
+    transition-delay: 0.5s;
+}
+
+/* تحسينات إضافية للصور */
+.service-image {
+    transform: scale(1);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    cursor: pointer;
+}
+
+.service-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(78, 107, 255, 0.3);
+}
