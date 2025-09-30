@@ -32,12 +32,144 @@ document.addEventListener('DOMContentLoaded', () => {
      * ------------------------------------------------------------------------
      */
     function initApp() {
+        createStars(); // Add star background
         initNavigation();
         initScrollBehavior();
         initInteractiveEffects();
         initProjectFilteringAndModal();
         initContactForm();
         initNewsletterForm();
+        initTypingEffect(); // Add typing effect
+        createOrbitalDots(); // Add orbital dots to hero
+    }
+    
+    /**
+     * ------------------------------------------------------------------------
+     *  Aesthetic & Background Effects
+     * ------------------------------------------------------------------------
+     */
+     function createStars() {
+        const starsContainer = document.createElement('div');
+        starsContainer.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;';
+        document.body.prepend(starsContainer);
+
+        const createStar = () => {
+            const star = document.createElement('div');
+            star.style.position = 'absolute';
+            star.style.background = '#fff';
+            star.style.borderRadius = '50%';
+            const size = Math.random() * 2 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.animation = `twinkle ${Math.random() * 5 + 3}s linear infinite alternate`;
+            star.style.opacity = `${Math.random() * 0.5 + 0.2}`;
+            starsContainer.appendChild(star);
+        };
+
+        for (let i = 0; i < 150; i++) {
+            createStar();
+        }
+
+        const keyframes = `
+            @keyframes twinkle {
+                to { opacity: 1; }
+            }
+        `;
+        const styleSheet = document.createElement("style");
+        styleSheet.type = "text/css";
+        styleSheet.innerText = keyframes;
+        document.head.appendChild(styleSheet);
+    }
+    
+    function createOrbitalDots() {
+        const heroLogo = document.querySelector<HTMLElement>('.hero-logo');
+        if (heroLogo) {
+            for (let i = 0; i < 3; i++) {
+                const orbit = document.createElement('div');
+                orbit.style.cssText = `
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: ${120 + i * 40}%;
+                    height: ${120 + i * 40}%;
+                    transform: translate(-50%, -50%);
+                    animation: rotate 1${i * 2 + 5}s linear infinite;
+                    border: 1px solid rgba(78, 107, 255, 0.15);
+                    border-radius: 50%;
+                `;
+
+                const dot = document.createElement('div');
+                dot.style.cssText = `
+                    position: absolute;
+                    top: -4px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 8px;
+                    height: 8px;
+                    background-color: var(--primary-color);
+                    border-radius: 50%;
+                    box-shadow: 0 0 10px var(--shadow-color);
+                `;
+
+                orbit.appendChild(dot);
+                heroLogo.appendChild(orbit);
+            }
+            
+            const keyframes = `
+                @keyframes rotate {
+                    to { transform: translate(-50%, -50%) rotate(360deg); }
+                }
+            `;
+            const styleSheet = document.createElement("style");
+            styleSheet.type = "text/css";
+            styleSheet.innerText = keyframes;
+            document.head.appendChild(styleSheet);
+        }
+    }
+    
+    function initTypingEffect() {
+        const element = document.querySelector<HTMLElement>('.hero-content .animate-text .highlight');
+        if (!element) return;
+        
+        const text = element.textContent.trim();
+        element.textContent = '';
+        element.style.display = 'inline-block';
+        let i = 0;
+
+        // Ensure parent is visible before starting
+        if (element.closest('.animate-text')) {
+             (element.closest('.animate-text') as HTMLElement).style.opacity = '1';
+        }
+
+        const type = () => {
+             if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                setTimeout(type, 120);
+            } else {
+                 element.classList.add('typing-done');
+            }
+        }
+        // Start after a delay to sync with other animations
+        setTimeout(type, 500);
+
+        const keyframes = `
+            .hero-content .highlight.typing-done::after {
+                content: '_';
+                font-weight: bold;
+                margin-right: 2px;
+                animation: blink 0.7s infinite;
+            }
+            @keyframes blink {
+                50% { opacity: 0; }
+            }
+        `;
+        const styleSheet = document.createElement("style");
+        styleSheet.type = "text/css";
+        styleSheet.innerText = keyframes;
+        document.head.appendChild(styleSheet);
     }
 
     /**
@@ -88,12 +220,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Active link highlighting on scroll
-        // Fix: Use generic type argument to specify that sections are HTMLElements.
         const sections = document.querySelectorAll<HTMLElement>('section[id]');
         window.addEventListener('scroll', () => {
             const scrollPosition = window.scrollY + 150;
             sections.forEach(section => {
-                // Fix: section is now correctly typed as HTMLElement, so offsetTop and offsetHeight are available.
                 if (scrollPosition >= section.offsetTop && scrollPosition < section.offsetTop + section.offsetHeight) {
                     const currentId = section.getAttribute('id');
                     navLinks.forEach(link => {
@@ -135,14 +265,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * ------------------------------------------------------------------------
-     *  5. Interactive Effects (3D Card Tilt)
+     *  5. Interactive Effects (3D Card Tilt & Glow)
      * ------------------------------------------------------------------------
      */
     function initInteractiveEffects() {
-        // Fix: Specify that cards are HTMLElements to access style property.
         const cards = document.querySelectorAll<HTMLElement>('.service-card, .project-card, .feature');
         cards.forEach(card => {
-            // Fix: Type the event as MouseEvent to access clientX and clientY.
+            // 3D Tilt Effect
             card.addEventListener('mousemove', (e: MouseEvent) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
@@ -152,12 +281,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rotateY = (x / width - 0.5) * 20; // Max 10deg rotation
 
                 card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+                
+                // Glow effect
+                const glow = card.querySelector('.glow-effect') as HTMLElement;
+                if (glow) {
+                   glow.style.left = `${x}px`;
+                   glow.style.top = `${y}px`;
+                }
             });
 
             card.addEventListener('mouseleave', () => {
                 card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
             });
+            
+            // Add glow element
+            const glowEffect = document.createElement('div');
+            glowEffect.className = 'glow-effect';
+            card.prepend(glowEffect);
         });
+        
+        // Add CSS for glow effect
+        const style = document.createElement('style');
+        style.textContent = `
+            .service-card, .project-card, .feature {
+                position: relative;
+                overflow: hidden;
+            }
+            .glow-effect {
+                position: absolute;
+                width: 200px;
+                height: 200px;
+                background: radial-gradient(circle, rgba(var(--primary-rgb, 78, 107, 255), 0.15) 0%, transparent 70%);
+                pointer-events: none;
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                transition: opacity 0.3s ease;
+                opacity: 0;
+            }
+            .service-card:hover .glow-effect, 
+            .project-card:hover .glow-effect, 
+            .feature:hover .glow-effect {
+                opacity: 1;
+            }
+        `;
+        document.head.appendChild(style);
     }
 
     /**
@@ -166,7 +333,6 @@ document.addEventListener('DOMContentLoaded', () => {
      * ------------------------------------------------------------------------
      */
     function initProjectFilteringAndModal() {
-        // Fix: Specify that buttons and cards are HTMLElements to access dataset property.
         const filterButtons = document.querySelectorAll<HTMLElement>('.filter-btn');
         const projectCards = document.querySelectorAll<HTMLElement>('.project-card');
 
@@ -180,7 +346,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 projectCards.forEach(card => {
                     const category = card.dataset.category;
                     const shouldShow = filter === 'all' || category === filter;
-                    card.classList.toggle('hidden', !shouldShow);
+                    // Use style.display for direct manipulation, as project-card is a flex container
+                    card.style.display = shouldShow ? 'flex' : 'none';
                 });
             });
         });
@@ -197,7 +364,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     description: projectCard.querySelector('p')?.textContent || 'N/A',
                     image: (projectCard.querySelector('img') as HTMLImageElement)?.src || '',
                     tech: Array.from(projectCard.querySelectorAll('.project-tech span')).map(span => span.textContent),
-                    // Fix: Cast the selected element to HTMLAnchorElement to access the href property.
                     link: (projectCard.querySelector('.primary-btn') as HTMLAnchorElement)?.href || '#'
                 };
                 showProjectDetails(details);
@@ -231,6 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             document.body.insertAdjacentHTML('beforeend', modalHTML);
             const modal = document.querySelector('.project-modal');
+            if(!modal) return;
             
             setTimeout(() => modal.classList.add('show'), 10);
 
@@ -239,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => modal.remove(), 300);
             };
 
-            modal.querySelector('.close-modal').addEventListener('click', closeModal);
+            (modal.querySelector('.close-modal') as HTMLElement).addEventListener('click', closeModal);
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     closeModal();

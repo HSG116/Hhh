@@ -8,14 +8,6 @@
     transition: var(--transition-slow);
     overflow: hidden;
     margin-bottom: 2rem;
-    opacity: 0;
-    transform: translateY(30px);
-}
-
-.service-card.visible {
-    opacity: 1;
-    transform: translateY(0);
-    animation: cardAppear 0.8s ease forwards;
 }
 
 /* تأثيرات ظهور البطاقات */
